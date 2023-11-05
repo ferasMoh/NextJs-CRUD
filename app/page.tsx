@@ -1,10 +1,15 @@
-/* Components */
-import { Counter } from './components/Counter/Counter'
+/* Home Page */
 
-export default function IndexPage() {
-  return <Counter />
-}
+import { Box } from "@mui/system";
 
-export const metadata = {
-  title: 'Redux Toolkit',
-}
+const Home = () => {
+  return (
+    <Box>
+      <h1>
+        This is Home Page
+      </h1>
+    </Box>
+  );
+};
+
+export default Home;
