@@ -7,7 +7,8 @@
   box-sizing: border-box;
 }
 
-
-.container{
+.appContainer{
+   height: 100%;
    background-color: rgb(243, 218, 218);
+   border-radius: 5px;
 }

@@ -1,36 +1,34 @@
 import * as React from "react";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Button, CircularProgress, rgbToHex } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import BoxMediaQuery from "@/app/MediaQuerys/BoxMedia";
 
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
-) {
+export default function Loading({ progress }: any) {
   return (
-    <Box sx={{ position: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
+    <Box
+      position={BoxMediaQuery() ? "fixed" : "relative"}
+      width={"100%"}
+      p={1}
+      display={"flex"}
+      alignItems={"center"}
+      height={20}
+    >
+      <CircularProgress size={25} />
+      <Box width={"100%"} ml={1}>
+        <LinearProgress
+          variant="determinate"
+          value={progress}
+          color="secondary"
+          sx={{ height: "12px", borderRadius: "5px" }}
+        />
       </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
+      <Box>
+        <Typography variant="body1" ml={1}>
+          {progress}%
+        </Typography>
       </Box>
     </Box>
   );
 }
-
-const Loading = () => {
-  return (
-    <Box>
-         <Button>Loading</Button>
-         <CircularProgress />
-         <LinearProgress sx={{height:'10px'}}/>
-    </Box>
-  );
-};
-
-export default Loading;

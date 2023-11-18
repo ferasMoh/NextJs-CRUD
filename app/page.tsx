@@ -1,13 +1,14 @@
-/* Home Page */
+/* App Page */
 
 import { Box } from "@mui/system";
+import Tasks from "./pages/tasks/page";
+import Footer from "./components/Footer/footer";
 
 const Home = () => {
+
   return (
     <Box>
-      <h1>
-        This is Home Page
-      </h1>
+      <Tasks />
     </Box>
   );
 };

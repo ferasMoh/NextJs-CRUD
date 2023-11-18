@@ -1,79 +1,54 @@
 /* Appbar Page */
 
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import { AppBar, Button, Box, Toolbar, Typography, Stack } from "@mui/material";
 import TasksIcon from "../../icon.ico";
-import Stack from "@mui/material/Stack";
-import Link from "next/link";
 import Image from "next/image";
 
 export default function Appbar() {
 
   /* Logout and remove token from local storage */
-  const logout = () =>{
-    localStorage.removeItem('Token');
-  }
+  const logout = () => {
+    localStorage.removeItem("Token");
+  };
 
   return (
-    <Stack direction={{ xs: "row" }} spacing={{ xs: 20, sm: 10, md: 4 }}>
-      <AppBar position="static">
+    <Stack direction={{ xs: "row" }}>
+      <AppBar position="static" color="secondary" sx={{ borderRadius: "10px" }}>
         <Toolbar>
           {/* Tasks Icon */}
           <Image src={TasksIcon} alt="TasksIcon" width={35} />
 
           {/* Tasks */}
-          <Link
-            href="../../pages/tasks"
-            style={{
-              cursor: "pointer",
-              textDecoration: "none",
-              color: "white",
-            }}
+          <Button
+            href="/pages/tasks"
+            color="inherit"
+            sx={{ marginLeft: "15px" }}
           >
-            <Typography variant="h6" marginLeft="20px">
-              Tasks
-            </Typography>
-          </Link>
+            Tasks
+          </Button>
 
           {/* Users */}
-          <Link
+          <Button
             href="/pages/users"
-            style={{
-              cursor: "pointer",
-              textDecoration: "none",
-              color: "white",
-            }}
+            color="inherit"
+            sx={{ marginLeft: "15px" }}
           >
-            <Typography variant="h6" marginLeft="20px">
-              Users
-            </Typography>
-          </Link>
+            Users
+          </Button>
 
           {/* Spacer */}
-          <Box flexBasis={1000}></Box>
+          <Box flexBasis={"100%"}></Box>
 
           {/* Logout */}
-          <Link
-            href="/auth/login"
-            style={{
-              cursor: "pointer",
-              textDecoration: "none",
-              color: "white",
-            }}
-            onClick={logout}
-          >
-            <Typography variant="h6" marginLeft="20px">
-              Logout
-            </Typography>
-          </Link>
+          <Button href="/pages/auth/login" color="inherit" onClick={logout}>
+            Logout
+          </Button>
 
           {/* Translate */}
-          <Typography variant="h6" marginLeft="20px">
-            Arabic
-          </Typography>
+          <Button color="inherit" sx={{ marginLeft: "15px" }}>
+            Language
+          </Button>
         </Toolbar>
       </AppBar>
     </Stack>

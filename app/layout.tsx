@@ -4,6 +4,7 @@
 import "./styles/globals.css";
 import { Tilt_Neon } from "next/font/google";
 import Appbar from "./components/Appbar/Appbar";
+import Footer from "./components/Footer/footer";
 import { Box, Container, Theme, Typography, createTheme } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { NextFont } from "next/dist/compiled/@next/font";
@@ -20,16 +21,17 @@ const tiltNeonFont:NextFont = Tilt_Neon({
 export default function RootLayout(props: React.PropsWithChildren) {
   /* check if showAppbar equal true then Appbar will be shown ,if false hide Appbar  */
   const pathName = usePathname();
-  const showAppbar = !(pathName === "/auth/login") ? true : false;
+  const showAppbar = !(pathName === "/pages/auth/login") ? true : false;
 
   return (
     <html lang="en">
       <body>
         {showAppbar ? (
-          <Box className={tiltNeonFont.className} >
+          <Box className={tiltNeonFont.className}>
             <Appbar />
-            <Container className="container" maxWidth="md" style={{height:'100vh'}}>
+            <Container className="appContainer" maxWidth="lg">
               {props.children}
+            <Footer />
             </Container>
           </Box>
         ) : (

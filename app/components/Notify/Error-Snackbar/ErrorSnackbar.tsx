@@ -1,9 +1,11 @@
-import { Alert, Snackbar, Stack } from "@mui/material";
+import { Alert, Snackbar, Stack, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 
 
 const ErrorSnackBar = ({ message }: any) => {
   const [open, setOpen] = useState(true);
+  const BoxMedia = useMediaQuery("(max-width:800px)");
+
 
   const handleClose = () => {
     setOpen(false);
@@ -26,6 +28,7 @@ const ErrorSnackBar = ({ message }: any) => {
         onClose={handleClose}
         message={"Notify"}
         action={action}
+        sx={BoxMedia ? {width : '30%'} : {width : '450px'}}
       />
     </Stack>
   );
