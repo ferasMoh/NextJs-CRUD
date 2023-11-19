@@ -28,7 +28,7 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [openAddTaskDialog, setOpenAddTaskDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-  const {confirm, setConfirm}:any = useContext(confirmation);
+  const { confirm, setConfirm }: any = useContext(confirmation);
   const [rowData, setRowData] = useState({});
 
   /* Tasks Rows */
@@ -62,27 +62,24 @@ const Tasks = () => {
     { field: "username", headerName: "Username", width: 120 },
     { field: "title", headerName: "Title", width: 120 },
     { field: "deadline", headerName: "Deadline", width: 120 },
-    { field: "status", innerWidth, headerName: "Status", width: 120 },
-    { field: "description", innerWidth, headerName: "Description", width: 200 },
+    { field: "status", headerName: "Status", width: 120 },
+    { field: "description", headerName: "Description", width: 200 },
     {
       field: "action",
       headerName: "Actions",
       width: 200,
       renderCell: (rowData: any) => (
         <Box>
-          <IconButton color="primary" onClick={() => EditTask(rowData.row)}>
+          <IconButton onClick={() => EditTask(rowData.row)}>
             <Tooltip title="Edit Task">
-              <EditRoundedIcon />
+              <EditRoundedIcon color="primary" />
             </Tooltip>
           </IconButton>
-          <Tooltip title="Delete Task">
-            <IconButton color="error">
-              <DeleteRoundedIcon
-                color="error"
-                onClick={() => DeleteTask(rowData.row.userID)}
-              />
-            </IconButton>
-          </Tooltip>
+          <IconButton onClick={() => DeleteTask(rowData.row.userID)}>
+            <Tooltip title="Delete Task">
+              <DeleteRoundedIcon color="error" />
+            </Tooltip>
+          </IconButton>
         </Box>
       ),
     },
@@ -144,28 +141,23 @@ const Tasks = () => {
     setOpenAddTaskDialog(true);
   }
 
- 
   function DeleteTask(rowUserId: any) {
-    setOpenConfirmationDialog(true)
-    console.log('Before Proccess : ' ,confirm)
-    if(confirmation){
-      console.log('Delete Task has been successed')
+    setOpenConfirmationDialog(true);
+    console.log("Before Proccess : ", confirm);
+    if (confirmation) {
+      console.log("Delete Task has been successed");
       handleClose();
-    }
-    else{
-      console.log('not')
+    } else {
+      console.log("not");
     }
 
-/*       try {
+    /*       try {
         api.delete(`/tasks/delete-task/${rowUserId}`);
         setOpenConfirmationDialog(false);
       } catch (error) {
         console.log(error);
       } */
-
   }
-
-
 
   /* Close Add Task Dialog */
   const handleClose = () => {

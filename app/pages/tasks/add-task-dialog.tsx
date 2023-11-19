@@ -59,15 +59,15 @@ const AddTaskDialog = ({
   addTaskForm.append("description", description);
 
   /* Fill input fields by row data */
-  React.useEffect(() => {
+/*   React.useEffect(() => {
     if (rowDataProp) {
       setRowData(rowDataProp);
       setTitle(rowDataProp.title);
       setDeadline(rowDataProp.deadline);
       setDescription(rowDataProp.description);
     }
-  }, rowDataProp && [rowDataProp.title, rowDataProp.deadline, rowDataProp.description]);
-
+  },[ rowDataProp && [rowDataProp.title, rowDataProp.deadline, rowDataProp.description]]);
+ */
   /* Get Users */
   React.useEffect(() => {
     const getUsers = async () => {
