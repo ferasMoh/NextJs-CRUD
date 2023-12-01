@@ -3,6 +3,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { relative } from "path";
+import { t } from "i18next";
 
 const Footer = () => {
   return (
@@ -41,7 +42,8 @@ const Footer = () => {
           <GitHubIcon />
         </IconButton>
       </Box>
-      <Typography variant="body2">All Copyrights reserved @2023</Typography>
+      <Typography variant="body2">{t('footer.about')}</Typography>
+      <Typography variant="body2">{t('footer.copyrights')} @2023</Typography>
     </Box>
   );
 };

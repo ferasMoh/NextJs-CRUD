@@ -1,5 +1,6 @@
 import { Alert, Snackbar, Stack } from "@mui/material";
 import { useState } from "react";
+import { t } from "i18next";
 
 const SuccessSnackBar = ({ message }: any) => {
   const [open, setOpen] = useState(true);
@@ -9,11 +10,8 @@ const SuccessSnackBar = ({ message }: any) => {
   };
 
   const action = (
-    <Alert
-      severity="success"
-      variant="filled"
-    >
-      {message} has been Successfully
+    <Alert severity="success" variant="filled">
+      {message} {t("snackbar.success")}
     </Alert>
   );
   return (
@@ -22,7 +20,7 @@ const SuccessSnackBar = ({ message }: any) => {
         open={open}
         autoHideDuration={3000}
         onClose={handleClose}
-        message={"Notify"}
+        message={`${t("snackbar.notify")}`}
         action={action}
       />
     </Stack>

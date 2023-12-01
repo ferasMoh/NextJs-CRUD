@@ -1,9 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import moment from "Moment";
-import axios from "axios";
 import api from "@/app/api/api/api";
 import {
   Typography,
@@ -20,17 +19,21 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { t } from "i18next";
+import Loading from "@/app/components/Notify/Loading/loading";
 
 interface DialogPropsInterface {
   open: boolean;
   onClose: () => void;
   rowDataProp: any;
+  handleSuccess: any;
 }
 
 const AddTaskDialog = ({
   open,
   onClose,
   rowDataProp,
+  handleSuccess,
 }: DialogPropsInterface) => {
   const {
     register,
@@ -39,6 +42,8 @@ const AddTaskDialog = ({
   } = useForm();
   const [rowData, setRowData] = React.useState();
   const [users, setUsers] = React.useState([]);
+  const [showLoading, setShowLoading] = React.useState(false);
+  const [loadingProgress, setLoadingProgress] = React.useState(20);
   const [title, setTitle] = React.useState(rowDataProp.title || "");
   const [userID, setUserID] = React.useState("");
   const [imageFile, setImageFile] = React.useState<File | null>(null);
@@ -59,15 +64,21 @@ const AddTaskDialog = ({
   addTaskForm.append("description", description);
 
   /* Fill input fields by row data */
-/*   React.useEffect(() => {
-    if (rowDataProp) {
+  React.useEffect(() => {
+    if (rowDataProp.title) {
       setRowData(rowDataProp);
       setTitle(rowDataProp.title);
       setDeadline(rowDataProp.deadline);
       setDescription(rowDataProp.description);
     }
-  },[ rowDataProp && [rowDataProp.title, rowDataProp.deadline, rowDataProp.description]]);
- */
+  }, [
+    rowDataProp.title && [
+      rowDataProp.title,
+      rowDataProp.deadline,
+      rowDataProp.description,
+    ],
+  ]);
+
   /* Get Users */
   React.useEffect(() => {
     const getUsers = async () => {
@@ -81,17 +92,20 @@ const AddTaskDialog = ({
 
   /* Add Task */
   const addTask = async (event: any) => {
+    setShowLoading(true);
     try {
       const response = await api.post("/tasks/add-task", addTaskForm, {
         headers: { "Content-Type": "multipart/form-data" },
+        onDownloadProgress: () => {
+          setLoadingProgress(100);
+        },
       });
-      if (response && response.data && response.data.path) {
-        console.log("Path:", response.data.path);
-      } else {
-        console.log("Path is not");
-      }
+      setShowLoading(false);
+      cancelDialog();
+      handleSuccess(true);
     } catch (error: any) {
-      console.log("Error is : ", error);
+      setShowLoading(false);
+      handleSuccess(false, error);
     }
   };
 
@@ -103,11 +117,18 @@ const AddTaskDialog = ({
         addTaskForm,
         {
           headers: { "Content-Type": "multipart/form-data" },
+          onDownloadProgress: () => {
+            setLoadingProgress(100);
+          },
         }
       );
-      console.log("response is ", response);
+
+      setShowLoading(false);
+      cancelDialog();
+      handleSuccess(true);
     } catch (error) {
-      console.log("error is ", error);
+      setShowLoading(false);
+      handleSuccess(false, error);
     }
 
     //onClose();
@@ -124,17 +145,19 @@ const AddTaskDialog = ({
 
   /* Cancel Dialog then clear all values data*/
   const cancelDialog = () => {
+    onClose();
     setTitle("");
     setUserID("");
     setImagePath("");
     setImageFile(null);
     setDeadline(moment().format("MM/DD/YYYY"));
     setDescription("");
-    onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
+      {/* Show Loading Animation Bar */}
+      {showLoading && <Loading progress={loadingProgress} />}
       <form onSubmit={handleSubmit(rowDataProp.title ? EditTask : addTask)}>
         <Box
           display={"flex"}
@@ -145,7 +168,11 @@ const AddTaskDialog = ({
           padding={4}
         >
           <Typography variant="h4" fontWeight={800} color={"secondary"}>
-            '' {rowDataProp.title ? "EDIT" : "ADD"} TASK ''
+            ''{" "}
+            {rowDataProp.title
+              ? `${t("add-task.edit-task-label")}`
+              : `${t("add-task.add-task-label")}`}{" "}
+            ''
           </Typography>
           <br />
           <FormControl fullWidth>
@@ -153,13 +180,13 @@ const AddTaskDialog = ({
             <FormControl>
               <TextField
                 type="text"
-                label="Title"
+                label={t("add-task.title")}
                 value={title}
                 {...register("title", {
-                  required: "Title is required",
+                  required: `${t("validation.title")}`,
                   minLength: {
                     value: 5,
-                    message: "This title should be 5 letters or more .",
+                    message: `${t("validation.title-minLength")}`,
                   },
                 })}
                 onChange={(e) => {
@@ -176,11 +203,13 @@ const AddTaskDialog = ({
 
             {/* UserId Field */}
             <FormControl>
-              <InputLabel id="usersLabel">Select User</InputLabel>
+              <InputLabel id="usersLabel">
+                {t("add-task.select-user")}
+              </InputLabel>
               <Select
                 labelId="usersLabel"
                 id="usersLabel"
-                label="Select User"
+                label={t("add-task.select-user")}
                 value={userID}
                 {...register("userID", { required: true })}
                 onChange={(e: any) => {
@@ -201,13 +230,13 @@ const AddTaskDialog = ({
               {rowDataProp.username && (
                 <Typography variant="body1" mt={1} fontWeight={600}>
                   {" "}
-                  User is : {rowDataProp.username}
+                  {t("add-task.user-is")} : {rowDataProp.username}
                 </Typography>
               )}
 
               {errors.userID && !userID && (
                 <p style={{ color: "red", fontSize: "15px" }}>
-                  User is required *
+                  {t("validation.user")}
                 </p>
               )}
             </FormControl>
@@ -222,7 +251,7 @@ const AddTaskDialog = ({
                 component="label"
                 sx={{ textTransform: "capitalize" }}
               >
-                Upload Image
+                {t("add-task.upload-image")}
                 <TextField
                   type="file"
                   {...register("imageFile", { required: true })}
@@ -234,14 +263,16 @@ const AddTaskDialog = ({
               </Button>
               {errors.imageFile && !imageFile && (
                 <p style={{ color: "red", fontSize: "15px" }}>
-                  Image is required *
+                  {t("validation.image")}
                 </p>
               )}
               {/* Show Image Path when uploaded */}
               {imagePath && (
                 <Typography variant="body1" marginTop={2}>
-                  <span style={{ fontWeight: "600" }}>Image path</span> :{" "}
-                  {imagePath}
+                  <span style={{ fontWeight: "600" }}>
+                    {t("add-task.image-path")}
+                  </span>{" "}
+                  : {imagePath}
                 </Typography>
               )}
             </FormControl>
@@ -260,7 +291,7 @@ const AddTaskDialog = ({
               </LocalizationProvider>
               {errors.deadline && !deadline && (
                 <p style={{ color: "red", fontSize: "15px" }}>
-                  Deadline is required *
+                  {t("validation.deadline")}
                 </p>
               )}
             </FormControl>
@@ -270,7 +301,7 @@ const AddTaskDialog = ({
             <FormControl>
               <TextField
                 type="text"
-                label="Description"
+                label={t("add-task.description")}
                 value={description}
                 {...register("description", { required: true })}
                 onChange={(e) => {
@@ -279,7 +310,7 @@ const AddTaskDialog = ({
               />
               {errors.description && !description && (
                 <p style={{ color: "red", fontSize: "15px" }}>
-                  Description is required *
+                  {t("validation.description")}
                 </p>
               )}
             </FormControl>
@@ -288,7 +319,9 @@ const AddTaskDialog = ({
             {/* Buttons */}
             <FormControl>
               <Button type="submit" variant="contained" color="secondary">
-                {rowDataProp.title ? "Edit-Task" : "Add-Task"}
+                {rowDataProp.title
+                  ? `${t("add-task.edit-task-button")}`
+                  : `${t("add-task.add-task-button")}`}
               </Button>
 
               {/* Cancel Button */}
@@ -298,7 +331,7 @@ const AddTaskDialog = ({
                 onClick={cancelDialog}
                 sx={{ marginTop: "5px" }}
               >
-                Cancel
+                {t("add-task.cancel-button")}
               </Button>
             </FormControl>
           </FormControl>

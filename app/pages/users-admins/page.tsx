@@ -1,24 +1,20 @@
-/* Users Page */
+/* Users and Admins Page */
 
 "use client";
-import { Box, Grid, Tooltip, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { UsersRowInterface } from "@/app/DTOs/DTOs";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import api from "@/app/api/api/api";
+import { t } from "i18next";
+import moment from "Moment";
 import ErrorSnackBar from "@/app/components/Notify/Error-Snackbar/ErrorSnackbar";
 import Loading from "@/app/components/Notify/Loading/loading";
 import SuccessSnackBar from "@/app/components/Notify/Success-Snackbar/successSnackbar";
-import api from "@/app/api/api/api";
-import ConfirmationDialog from "@/app/components/ConfirmationDialog/ConfirmationDialog";
-import moment from "Moment";
-import { t } from "i18next";
-import withAuthAdmin from "@/app/withAuth/withAuthAdmin";
+import withAuthUser from "@/app/withAuth/withAuthUser";
 
-const Users = () => {
+const UsersAdmins = () => {
   const router = useRouter();
   const [showLoading, setShowLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(20);
@@ -26,10 +22,7 @@ const Users = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [SuccessMessage, setSuccessMessage] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
-  const [users, setUsers] = useState<UsersRowInterface | any>([]);
-  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-  const [rowData, setRowData]: any = useState([]);
-  const [rowID, setRowID] = useState("");
+  const [users, setUsers] = useState([]);
 
   /* Users Rows */
   const rows: Array<any> = users.map(
@@ -43,7 +36,6 @@ const Users = () => {
         dateCreated: moment(user.createdAt).format("DD/MM/YYYY"),
         assignedTasks: user.assignedTasks,
         status: user.status,
-        action: renderActionsCell,
       };
     }
   );
@@ -65,31 +57,6 @@ const Users = () => {
       width: 120,
     },
     { field: "status", headerName: `${t("users.status")}`, width: 120 },
-    {
-      field: "action",
-      headerName: `${t("users.actions")}`,
-      width: 200,
-      renderCell: (rowData: any) => (
-        <Box>
-          <IconButton onClick={() => changeStatus(rowData.row)}>
-            <Tooltip title={t("users.change-status-tooltip")}>
-              {rowData.row.status === "Active" ? (
-                <AssignmentTurnedInIcon color="success" />
-              ) : (
-                <AssignmentTurnedInOutlinedIcon color="warning" />
-              )}
-            </Tooltip>
-          </IconButton>
-
-          {/* Delete Icon */}
-          <IconButton onClick={() => DeleteTask(rowData.row)}>
-            <Tooltip title={t("users.delete-user-tooltip")}>
-              <DeleteRoundedIcon color="error" />
-            </Tooltip>
-          </IconButton>
-        </Box>
-      ),
-    },
   ];
 
   /* GET All Users */
@@ -134,82 +101,9 @@ const Users = () => {
       }, 3000);
     }
   }
-
   useEffect(() => {
     getUsers();
   }, []);
-
-  /* Change Status */
-  async function changeStatus(rowData: any) {
-    setShowLoading(true);
-    const data = { id: rowData.userID, status: rowData.status };
-    try {
-      const response = await api.put("/auth/user-status", data);
-      setShowLoading(false);
-      setSuccessMessage(`${t("users.get-change-status-success")}`);
-      setShowSuccess(true);
-      setTimeout(() => {
-        getUsers();
-      }, 2000);
-    } catch (error: any) {
-      setErrorMessage(error.message);
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setErrorMessage("");
-      }, 3000);
-    }
-  }
-
-  /* Open Delete User Dialog */
-  function DeleteTask(rowData: any) {
-    setOpenConfirmationDialog(true);
-    setRowData(rowData);
-    setRowID(rowData.userID);
-    handleConfirmation(false);
-  }
-
-  /* Handle Delete Confirmation */
-  async function handleConfirmation(confirmationProp: boolean) {
-    if (confirmationProp) {
-      handleClose();
-      setShowLoading(true);
-      if (rowData.assignedTasks <= 0) {
-        try {
-          const response = await api.delete(`/auth/user/${rowID}`);
-          setShowLoading(false);
-          setSuccessMessage(`${t("users.get-delete-user-success")}`);
-          setShowSuccess(true);
-          getUsers();
-          setTimeout(() => {
-            setShowSuccess(false);
-            setSuccessMessage("");
-          }, 2000);
-        } catch (error: any) {
-          setShowLoading(false);
-          setShowError(true);
-          setErrorMessage(error.message);
-          setTimeout(() => {
-            setErrorMessage("");
-            setShowError(false);
-          }, 2000);
-        }
-      } else {
-        setShowLoading(false);
-        setErrorMessage(`${t("users.cant-delete-user")}`);
-        setShowError(true);
-        setTimeout(() => {
-          setErrorMessage("");
-          setShowError(false);
-        }, 3000);
-      }
-    }
-  }
-
-  /* Close Dialog */
-  const handleClose = () => {
-    setOpenConfirmationDialog(false);
-  };
 
   return (
     <Grid
@@ -252,18 +146,8 @@ const Users = () => {
 
       {/* Show Error */}
       {showError && <ErrorSnackBar message={ErrorMessage} />}
-
-      {/* Confirmation Dialog */}
-      {openConfirmationDialog && (
-        <ConfirmationDialog
-          message={t("users.delete-message")}
-          open={openConfirmationDialog}
-          onClose={handleClose}
-          handleConfirmation={handleConfirmation}
-        />
-      )}
     </Grid>
   );
 };
 
-export default withAuthAdmin(Users);
+export default withAuthUser(UsersAdmins);

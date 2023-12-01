@@ -8,9 +8,9 @@ import {
   IconButton,
   TextField,
   Grid,
+  Link,
 } from "@mui/material";
 import * as React from "react";
-import axios from "axios";
 import Image from "next/image";
 import LoginImage from "../../../../public/images/login.png";
 import TasksIcon from "../../../icon.ico";
@@ -24,9 +24,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import  api  from "@/app/api/api/api";
+import api from "@/app/api/api/api";
+import { t } from "i18next";
 
-const Login = () => {
+const LoginUser = () => {
   const router = useRouter();
   const {
     register,
@@ -42,13 +43,11 @@ const Login = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(20);
   const [ErrorMessage, setErrorMessage] = useState("");
-  
 
-  /* Object contains email and password to send it to api*/
   const loginData: loginDataInterface = {
     email: email,
     password: password,
-    role: "admin",
+    role: "user",
   };
 
   /* POST Proccess */
@@ -57,22 +56,24 @@ const Login = () => {
     try {
       setShowLoading(true);
       const response = await api.post("/auth/login", loginData, {
-          onUploadProgress: (progressEvent: any) => {
-            let percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setLoadingProgress(percentCompleted);
-          },
-        });
+        onUploadProgress: (progressEvent: any) => {
+          let percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setLoadingProgress(percentCompleted);
+        },
+      });
       setShowLoading(false);
       setLoadingProgress(20);
       localStorage.setItem("Token", response.data.token);
+      localStorage.setItem("role", "user");
+      localStorage.setItem("userId", response.data.userId);
       setEmail("");
       setPassword("");
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
-        router.push("/pages/tasks");
+        router.push("/pages/tasks-user");
       }, 3000);
     } catch (error: any) {
       setShowLoading(false);
@@ -135,21 +136,29 @@ const Login = () => {
           flexDirection={"column"}
           justifyContent={"center"}
           alignItems={"center"}
+          flexWrap={"nowrap"}
         >
           {/* Tasks Logo and Heading */}
           <Grid
             item
-            xs={5}
+            xs={4}
             display={"flex"}
             flexDirection={"column"}
             justifyContent={"flex-end"}
+            alignItems={"center"}
           >
-            <Image src={TasksIcon} alt="TasksIcon" width={70} />
-            <h1 style={{ marginTop: "20px" }}>Login</h1>
+            <Image src={TasksIcon} alt="TasksIcon" width={50} />
+            <h2 style={{ marginTop: "20px" }}>{t("login.user-login")}</h2>
           </Grid>
 
           {/* Login Form */}
-          <Grid item xs={7} display={"flex"} justifyContent={"flex-start"}>
+          <Grid
+            item
+            xs={4}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"flex-start"}
+          >
             <form onSubmit={handleSubmit(sendLoginData)}>
               <FormControl
                 sx={BoxMediaQuery() ? { width: "150px" } : { width: "300px" }}
@@ -159,7 +168,7 @@ const Login = () => {
                   <TextField
                     variant="standard"
                     type="email"
-                    label="Email"
+                    label={t("login.email")}
                     value={email}
                     {...register("email", { required: true })}
                     onChange={(e) => {
@@ -168,7 +177,7 @@ const Login = () => {
                   />
                   {errors.email && !email && (
                     <p style={{ color: "red", fontSize: "13px" }}>
-                      Email is required *
+                      {t("validation.email")}
                     </p>
                   )}
                 </FormControl>
@@ -178,7 +187,7 @@ const Login = () => {
                 <FormControl>
                   <TextField
                     variant="standard"
-                    label="Password"
+                    label={t("login.password")}
                     value={password}
                     {...register("password", { required: true })}
                     onChange={(e) => setPassword(e.target.value)}
@@ -205,7 +214,7 @@ const Login = () => {
                   />
                   {errors.password && !password && (
                     <p style={{ color: "red", fontSize: "13px" }}>
-                      Password is required *
+                      {t("validation.password")}
                     </p>
                   )}
                 </FormControl>
@@ -213,25 +222,32 @@ const Login = () => {
 
                 {/* Login Button */}
                 <FormControl>
-                  <Button
-                    type="submit"
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Login
+                  <Button type="submit" color="secondary" variant="contained">
+                    {t("login.login-button")}
                   </Button>
                 </FormControl>
               </FormControl>
             </form>
           </Grid>
+
+          {/* Pages Links */}
+          <Grid item xs={4} display={"flex"} flexDirection={"column"}>
+            <Link href="/pages/auth/login-admin">{t("login.admin-link")}</Link>
+            <br />
+            <Link href="/pages/auth/register-user">
+              {t("login.register-link")}
+            </Link>
+          </Grid>
         </Grid>
 
         {/* Check to show Success and Error Snackbar */}
-        {showSuccess && <SuccessSnackBar message="Login" />}
+        {showSuccess && (
+          <SuccessSnackBar message={t("login.get-login-success")} />
+        )}
         {showError && <ErrorSnackBar message={ErrorMessage} />}
       </Grid>
     </Grid>
   );
 };
 
-export default Login;
+export default LoginUser;

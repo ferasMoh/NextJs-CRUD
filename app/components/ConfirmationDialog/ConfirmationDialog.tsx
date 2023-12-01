@@ -6,38 +6,32 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import { t } from 'i18next'
 
-
-export const confirmation: any = React.createContext(false);
-
-const ConfirmationDialog = ({ message, open, onClose }: any) => {
-  const [confirm, setConfirm] = React.useState(false);
+const ConfirmationDialog = ({ message, open, onClose, handleConfirmation }: any) => {
 
   function handleConfirm() {
-    setConfirm(true);
+    handleConfirmation(true);
   }
-  console.log("from dialog : ", confirm);
 
   return (
-    <confirmation.Provider value={{ confirm, setConfirm }}>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Confirmation Dialog</DialogTitle>
+        <DialogTitle>{t('confirm-dialog.label')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <DeleteForeverRoundedIcon fontSize="large" />
-            Are you sure you want to {message}
+            {message.includes('delete') || message.includes('حذف') && <DeleteForeverRoundedIcon fontSize="large" />}
+            {t('confirm-dialog.message')} {message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" color="error" onClick={onClose}>
-            Cancel
+          {t('confirm-dialog.cancel')}
           </Button>
           <Button variant="contained" color="secondary" onClick={handleConfirm}>
-            OK
+          {t('confirm-dialog.ok')}
           </Button>
         </DialogActions>
       </Dialog>
-    </confirmation.Provider>
   );
 };
 
