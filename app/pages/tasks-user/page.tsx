@@ -182,11 +182,10 @@ const TasksUser = () => {
 
         {/* In-Progress Tasks */}
         <Box display={"flex"} justifyContent={"space-around"} flexWrap={"wrap"}>
-          {tasksInProgress.map((task: any) => {
+          {tasksInProgress.map((task: any, index: number) => {
             return (
-              <Card sx={{ width: "265px", marginTop: "10px" }}>
+              <Card sx={{ width: "265px", marginTop: "10px" }} key={index}>
                 <CardContent>
-                  <img src={task.image} alt="TaskImage" />
                   <Typography
                     variant="h5"
                     color="text.secondary"
@@ -239,14 +238,10 @@ const TasksUser = () => {
         </Box>
         {/* Completed Tasks */}
         <Box display={"flex"} justifyContent={"space-around"} flexWrap={"wrap"}>
-          {tasksCompleted.map((task: any) => {
+          {tasksCompleted.map((task: any, index: number) => {
             return (
-              <Card sx={{ width: "265px", marginTop: "10px" }}>
+              <Card sx={{ width: "265px", marginTop: "10px" }} key={index}>
                 <CardContent>
-                  <img
-                    src="../../../public/images/task-image.png"
-                    alt="TaskImage"
-                  />
                   <Typography
                     variant="h5"
                     color="text.secondary"

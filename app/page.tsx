@@ -2,8 +2,6 @@
 
 "use client";
 import { Box } from "@mui/system";
-import Tasks from "./pages/tasks/page";
-import TasksUser from "./pages/tasks-user/page";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

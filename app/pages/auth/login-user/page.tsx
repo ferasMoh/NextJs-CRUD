@@ -116,6 +116,7 @@ const LoginUser = () => {
         >
           <Image
             src={LoginImage}
+            priority={true}
             style={
               BoxMediaQuery()
                 ? { width: "50%", height: "100vh" }

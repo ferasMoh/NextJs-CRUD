@@ -1,9 +1,8 @@
+/* ِAdd Task Dialog  */
+
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
-import moment from "Moment";
-import api from "@/app/api/api/api";
 import {
   Typography,
   FormControl,
@@ -15,12 +14,15 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import moment from "Moment";
+import api from "@/app/api/api/api";
+import { t } from "i18next";
 import dayjs from "dayjs";
+import Loading from "@/app/components/Notify/Loading/loading";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { t } from "i18next";
-import Loading from "@/app/components/Notify/Loading/loading";
 
 interface DialogPropsInterface {
   open: boolean;
@@ -44,10 +46,11 @@ const AddTaskDialog = ({
   const [users, setUsers] = React.useState([]);
   const [showLoading, setShowLoading] = React.useState(false);
   const [loadingProgress, setLoadingProgress] = React.useState(20);
-  const [title, setTitle] = React.useState(rowDataProp.title || "");
-  const [userID, setUserID] = React.useState("");
+  const [title, setTitle] = React.useState("");
+  const [userID, setUserID] = React.useState(rowDataProp.userId || "");
+  const [taskID, setTaskID] = React.useState(rowDataProp.taskId || "");
   const [imageFile, setImageFile] = React.useState<File | null>(null);
-  const [imagePath, setImagePath] = React.useState("");
+  const [imagePath, setImagePath] = React.useState(rowDataProp.imagePath || "");
   const [deadline, setDeadline] = React.useState(
     moment(rowDataProp.deadline || "").format("MM/DD/YYYY")
   );
@@ -68,16 +71,13 @@ const AddTaskDialog = ({
     if (rowDataProp.title) {
       setRowData(rowDataProp);
       setTitle(rowDataProp.title);
+      setUserID(rowDataProp.userId);
+      setTaskID(rowDataProp.taskId);
+      setImagePath(rowDataProp.imagePath);
       setDeadline(rowDataProp.deadline);
       setDescription(rowDataProp.description);
     }
-  }, [
-    rowDataProp.title && [
-      rowDataProp.title,
-      rowDataProp.deadline,
-      rowDataProp.description,
-    ],
-  ]);
+  }, [rowDataProp.title && rowDataProp]);
 
   /* Get Users */
   React.useEffect(() => {
@@ -91,7 +91,7 @@ const AddTaskDialog = ({
   }, []);
 
   /* Add Task */
-  const addTask = async (event: any) => {
+  const addTask = async () => {
     setShowLoading(true);
     try {
       const response = await api.post("/tasks/add-task", addTaskForm, {
@@ -113,7 +113,7 @@ const AddTaskDialog = ({
   const EditTask = async () => {
     try {
       const response = await api.put(
-        `/tasks/edit-task/${userID}`,
+        `/tasks/edit-task/${taskID}`,
         addTaskForm,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -214,7 +214,6 @@ const AddTaskDialog = ({
                 {...register("userID", { required: true })}
                 onChange={(e: any) => {
                   setUserID(e.target.value);
-                  rowDataProp.username && (rowDataProp.username = "");
                 }}
               >
                 <MenuItem value="" sx={{ height: "40px" }}></MenuItem>
@@ -226,13 +225,6 @@ const AddTaskDialog = ({
                   );
                 })}
               </Select>
-
-              {rowDataProp.username && (
-                <Typography variant="body1" mt={1} fontWeight={600}>
-                  {" "}
-                  {t("add-task.user-is")} : {rowDataProp.username}
-                </Typography>
-              )}
 
               {errors.userID && !userID && (
                 <p style={{ color: "red", fontSize: "15px" }}>

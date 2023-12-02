@@ -37,11 +37,12 @@ const Tasks = () => {
   const rows: Array<any> = tasks.map(
     (task: TasksRowsInterface, index: number) => {
       return {
+        taskId: task._id, //hidden only for send taskId to props
+        userId: task.userId._id, //hidden , only for send userID to props
+        imagePath: task.image, //hidden , only for send imagePath to props
         id: index + 1,
-        imageLink: task.image,
         img: renderActionsCell,
         username: task.userId.username,
-        userID: task._id, //hidden , only for send to props
         title: task.title,
         deadline: task.deadline,
         status: task.status,
@@ -58,9 +59,10 @@ const Tasks = () => {
       field: "img",
       headerName: `${t("tasks.image")}`,
       width: 120,
-      renderCell: (rowData: any) => (
-        <img
-          src={rowData.row.imageLink}
+      renderCell: () => (
+        <Image
+          src={taskImage}
+          priority={true}
           alt="taskImage"
           width={40}
           height={40}
@@ -249,11 +251,11 @@ const Tasks = () => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[10]}
             checkboxSelection
             disableRowSelectionOnClick
           />
