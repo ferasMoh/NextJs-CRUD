@@ -54,7 +54,6 @@ const RegisterUser = () => {
     username: username,
     email: email,
     password: password,
-    role: "user",
   };
 
   /* POST Proccess */
@@ -134,7 +133,7 @@ const RegisterUser = () => {
           />
         </Grid>
 
-        {/* Login Box */}
+        {/* Register Box */}
         <Grid
           item
           xs={6}
@@ -160,7 +159,7 @@ const RegisterUser = () => {
             <h2 style={{ marginTop: "20px" }}>{t("login.register-login")}</h2>
           </Grid>
 
-          {/* Login Form */}
+          {/* Register Form */}
           <Grid
             item
             xs={4}

@@ -21,7 +21,8 @@
         "user-link": "I have user account",
         "register-link": "Register New User",
         "get-login-success": "Login",
-        "get-register-success": "Create Account"
+        "get-register-success": "Create Account",
+        "role" : "Role _ Admin & User"
     },
     "tasks": {
         "add-task-button": "ADD TASK",
@@ -54,6 +55,7 @@
     },
     "validation": {
         "email": "Email is required * ",
+        "role": "Role is required",
         "password": "Password is required * ",
         "username": "Username is required * ",
         "confirm-password": "Confirm Password is required * ",

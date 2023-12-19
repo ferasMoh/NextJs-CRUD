@@ -21,7 +21,8 @@
         "user-link": "أنا أملك حساب مستخدم",
         "register-link": "تسجيل حساب مستخدم جديد",
         "get-login-success": "عملية تسجيل الدخول",
-        "get-register-success": "عملية إنشاء الحساب"
+        "get-register-success": "عملية إنشاء الحساب",
+        "role" : "الوظيفة _ مسؤول & مستخدم"
     },
     "tasks": {
         "add-task-button": "إضافة مهمة",
@@ -54,6 +55,7 @@
     },
     "validation": {
         "email": "الإيميل مطلوب * ",
+        "role": "الوظيفة مطلوبة",
         "username": "اسم المستخدم مطلوب * ",
         "password": "كلمة السر مطلوبة * ",
         "confirm-password": "تأكيد كلمة السر مطلوب * ",

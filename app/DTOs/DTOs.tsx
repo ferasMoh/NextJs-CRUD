@@ -8,7 +8,6 @@ export interface RegisterDataInterface {
   username : string;
   email: string;
   password: string;
-  role: string;
 }
 
 export interface TasksRowsInterface {

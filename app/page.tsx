@@ -8,8 +8,13 @@ import { useEffect } from "react";
 const Home = () => {
   const router = useRouter();
   const admin: any = localStorage.getItem("role") === "admin";
+  const user: any = localStorage.getItem("role") === "user";
   useEffect(() => {
-    admin ? router.push("/pages/tasks") : router.push("/pages/tasks-user");
+    admin
+      ? router.push("/pages/tasks")
+      : user
+      ? router.push("/pages/tasks-user")
+      : router.push("/pages/auth/login-user");
   }, []);
 
   return <Box></Box>;

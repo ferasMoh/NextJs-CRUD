@@ -31,7 +31,7 @@ const Tasks = () => {
   const [openAddTaskDialog, setOpenAddTaskDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [rowData, setRowData] = useState({});
-  const [rowID, setRowID] = useState("");
+  const [rowTaskId, setRowTaskId] = useState("");
 
   /* Tasks Rows */
   const rows: Array<any> = tasks.map(
@@ -89,7 +89,7 @@ const Tasks = () => {
               <EditRoundedIcon color="primary" />
             </Tooltip>
           </IconButton>
-          <IconButton onClick={() => DeleteTask(rowData.row.userID)}>
+          <IconButton onClick={() => DeleteTask(rowData.row.taskId)}>
             <Tooltip title={t("tasks.delete-task-tooltip")}>
               <DeleteRoundedIcon color="error" />
             </Tooltip>
@@ -174,9 +174,10 @@ const Tasks = () => {
   }
 
   /* Open Delete Task Dialog */
-  function DeleteTask(rowUserId: any) {
+  function DeleteTask(taskId: any) {
     setOpenConfirmationDialog(true);
-    setRowID(rowUserId);
+    setRowTaskId(taskId);
+    console.log(rowTaskId);
     handleConfirmation(false);
   }
 
@@ -186,7 +187,7 @@ const Tasks = () => {
       handleClose();
       setShowLoading(true);
       try {
-        const response = await api.delete(`/tasks/delete-task/${rowID}`);
+        const response = await api.delete(`/tasks/delete-task/${rowTaskId}`);
         setShowLoading(false);
         setSuccessMessage(`${t("tasks.delete-message")}`);
         setShowSuccess(true);
@@ -284,6 +285,10 @@ const Tasks = () => {
       )}
     </Grid>
   );
+};
+
+Tasks.getInitialProps = async () => {
+  return {};
 };
 
 export default withAuthAdmin(Tasks);
