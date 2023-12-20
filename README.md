@@ -1,29 +1,76 @@
-# Redux Toolkit TypeScript Example
+# TASKS CRUD
+Tasks Project,
+https://github.com/ferasMoh/crud-Frontend
 
-This example shows how to integrate Next.js with [Redux Toolkit](https://redux-toolkit.js.org).
+## Description
+This is an CRUD project and its talking about an admin who distributes tasks to his users,
+We are divided the project into two parts ( admin part and user part ),
+admin part call it by this command ( ng serve admin ),
+   Port : 3000  ,   Link : http://localhost:3000/ ,
+user part call it by this command ( ng serve user ),
+   Port : 4000  ,   Link : http://localhost:4000/ .
 
-The **Redux Toolkit** is a standardized way to write Redux logic (create actions and reducers, setup the store with some default middlewares like redux devtools extension). This example demonstrates each of these features with Next.js
+## Login
+* In admin part we have one admin is already exist,
+    email : feras@admin.com,
+    password : 12345,
 
-## Deploy your own
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+* In user part we have this three users :
+    email : ali@user.com,
+	password : 12345,
+	email : anas@user.com,
+	password : 12345,
+    email : ahmad@user.com,
+	password : 12345,
+also you can add more users by go to user part and navigate to register page then fill all fields.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-redux&project-name=with-redux&repository-name=with-redux)
 
-## How to use
+## Tasks
+In admin part you can add tasks to users ,
+when you add a task all this task data will show inside a mat-table in admin part ,
+and when user open his account he will see his tasks inside a html card ,
+and when user complete his task he can press on complete button to completed ,
+then this task will show as completed Task inside status column in admin part .
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+## Edit Task
+admin can edit tasks by clicking on edit icon and change the data .
 
-```bash
-npx create-next-app --example with-redux with-redux-app
-```
+## Users
+In admin part you can press on Users button to see all users ,
+you can delete user from database and change his status ( Active , In-active ),
+if user status is In-active then user can't login to his account
+if user tasks is not finished his tasks then admin can't delete this user until he finish his tasks.
 
-```bash
-yarn create next-app --example with-redux with-redux-app
-```
+## Search
+In this project you can search for Tasks by name ,username ,date and status,
+also you can search for users by name .
 
-```bash
-pnpm create next-app --example with-redux with-redux-app
-```
+## Language
+In this project we have two languages to use ( English - Arabic ).
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+
+## CRUD
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.7.
+
+
+## Code scaffolding
+
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
